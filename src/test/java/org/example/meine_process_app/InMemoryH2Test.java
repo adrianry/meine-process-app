@@ -29,6 +29,9 @@ public class InMemoryH2Test {
 
   private static final String PROCESS_DEFINITION_KEY = "meine-process-app";
 
+  private final Logger LOGGER = Logger.getLogger(InMemoryH2Test.class.getName());
+
+  
   // enable more detailed logging
   static {
 //    LogUtil.readJavaUtilLoggingConfigFromClasspath(); // process engine
@@ -55,13 +58,16 @@ public class InMemoryH2Test {
 	    org.camunda.bpm.engine.task.Task task = taskService.createTaskQuery().initializeFormKeys().singleResult();
 	    assertEquals("User Workflow", task.getName());
 
-	    Logger.getLogger("TestLogger").info("Ausgabe des Loggers: " + task.getFormKey());
-
 	    taskService.complete(task.getId());
-    
-		
-	    assertEquals(0, meinRuntimeService.createProcessInstanceQuery().count());
 	    
+	    LOGGER.info("Ausgabe des Loggers: " + task.getFormKey());
   }
+  
+  @Test
+  public void testComplete() {
+	  RuntimeService meinRuntimeService = rule.getRuntimeService();
+	  assertEquals(0, meinRuntimeService.createProcessInstanceQuery().count());
+}
+
 
 }
